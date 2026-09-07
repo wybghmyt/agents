@@ -6,8 +6,7 @@
 - CUDA：12.8
 
 ### 模型
-
-- Qwen3-8B
+- Qwen2.5-7B-Instruct
 
 ### 启动参数
 

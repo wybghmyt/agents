@@ -126,7 +126,7 @@ def build_query(base_ctx: str, init_obs: str, turns):
     def seg_of(a, o, warned):
         seg = f"\n> {a}\n{o}"
         if warned:
-            seg += f"\n{WARN_TEXT}"
+            seg += f"{WARN_TEXT}"
         return seg
 
     ctx = base_ctx + "\n" + init_obs
