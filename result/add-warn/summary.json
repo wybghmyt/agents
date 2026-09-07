@@ -1,0 +1,69 @@
+{
+  "variant": "add_warn",
+  "per_task": {
+    "pick_and_place": {
+      "count": 24,
+      "success": 21,
+      "success_rate": 0.875,
+      "avg_steps": 15.86,
+      "avg_steps_all": 20.12,
+      "invalid_action_rate": 0.2174,
+      "avg_warned_times": 5.46
+    },
+    "pick_clean_then_place": {
+      "count": 31,
+      "success": 18,
+      "success_rate": 0.5806,
+      "avg_steps": 12.11,
+      "avg_steps_all": 28.0,
+      "invalid_action_rate": 0.5219,
+      "avg_warned_times": 15.48
+    },
+    "pick_heat_then_place": {
+      "count": 23,
+      "success": 16,
+      "success_rate": 0.6957,
+      "avg_steps": 11.0,
+      "avg_steps_all": 22.87,
+      "invalid_action_rate": 0.4525,
+      "avg_warned_times": 11.22
+    },
+    "pick_cool_then_place": {
+      "count": 21,
+      "success": 17,
+      "success_rate": 0.8095,
+      "avg_steps": 12.29,
+      "avg_steps_all": 19.48,
+      "invalid_action_rate": 0.3081,
+      "avg_warned_times": 6.76
+    },
+    "look_at_obj": {
+      "count": 18,
+      "success": 2,
+      "success_rate": 0.1111,
+      "avg_steps": 6.5,
+      "avg_steps_all": 45.17,
+      "invalid_action_rate": 0.5597,
+      "avg_warned_times": 32.33
+    },
+    "pick_two_obj": {
+      "count": 17,
+      "success": 4,
+      "success_rate": 0.2353,
+      "avg_steps": 13.0,
+      "avg_steps_all": 41.29,
+      "invalid_action_rate": 0.6225,
+      "avg_warned_times": 27.0
+    }
+  },
+  "overall": {
+    "count": 134,
+    "success": 78,
+    "success_rate": 0.5821,
+    "avg_steps": 12.83,
+    "avg_steps_all": 28.37,
+    "invalid_action_rate": 0.4772,
+    "avg_warned_times": 15.31,
+    "unique_games": 134
+  }
+}

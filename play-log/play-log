@@ -1,0 +1,29 @@
+============================================================
+时间      : 2026-08-29 20:04:03
+游戏文件  : /root/autodl-tmp/alfworld/json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Drawer-10/trial_T20190909_021613_077537/game.tw-pddl
+任务目标  : -= Welcome to TextWorld, ALFRED! =-
+
+You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.
+
+Your task is to: put a saltshaker in drawer.
+步数      : 8
+结果      : 通关
+------------------------------------------------------------
+第  1 步 | 输入: go to cabinet 1
+         | 反馈: You arrive at cabinet 1. On the cabinet 1, you see a glassbottle 1.
+第  2 步 | 输入: go to cabinet 2
+         | 反馈: You arrive at cabinet 2. The cabinet 2 is closed.
+第  3 步 | 输入: examine cabinet 2
+         | 反馈: The cabinet 2 is closed.
+第  4 步 | 输入: open cabinet 2
+         | 反馈: You open the cabinet 2. The cabinet 2 is open. In it, you see a plate 1, a saltshaker 1, and a soapbottle 1.
+第  5 步 | 输入: take saltshaker 1 from cabinet 2
+         | 反馈: You pick up the saltshaker 1 from the cabinet 2.
+第  6 步 | 输入: go to drawer 1
+         | 反馈: You arrive at drawer 1. The drawer 1 is closed.
+第  7 步 | 输入: open drawer 1
+         | 反馈: You open the drawer 1. The drawer 1 is open. In it, you see a fork 1, and a peppershaker 1.
+第  8 步 | 输入: move saltshaker 1 to drawer 1
+         | 反馈: You move the saltshaker 1 to the drawer 1.
+============================================================
+

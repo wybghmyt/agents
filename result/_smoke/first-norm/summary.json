@@ -1,0 +1,54 @@
+{
+  "per_task": {
+    "pick_and_place": {
+      "count": 2,
+      "success": 0,
+      "success_rate": 0.0,
+      "avg_steps": 50.0,
+      "invalid_action_rate": 0.8
+    },
+    "pick_clean_then_place": {
+      "count": 5,
+      "success": 3,
+      "success_rate": 0.6,
+      "avg_steps": 26.4,
+      "invalid_action_rate": 0.7045
+    },
+    "pick_heat_then_place": {
+      "count": 2,
+      "success": 1,
+      "success_rate": 0.5,
+      "avg_steps": 29.5,
+      "invalid_action_rate": 0.6949
+    },
+    "pick_cool_then_place": {
+      "count": 5,
+      "success": 3,
+      "success_rate": 0.6,
+      "avg_steps": 24.4,
+      "invalid_action_rate": 0.7049
+    },
+    "look_at_obj": {
+      "count": 1,
+      "success": 0,
+      "success_rate": 0.0,
+      "avg_steps": 50.0,
+      "invalid_action_rate": 0.34
+    },
+    "pick_two_obj": {
+      "count": 1,
+      "success": 1,
+      "success_rate": 1.0,
+      "avg_steps": 10.0,
+      "invalid_action_rate": 0.0
+    }
+  },
+  "overall": {
+    "count": 16,
+    "success": 8,
+    "success_rate": 0.5,
+    "avg_steps": 29.56,
+    "invalid_action_rate": 0.6702,
+    "unique_games": 16
+  }
+}

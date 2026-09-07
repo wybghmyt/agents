@@ -1,0 +1,392 @@
+{
+  "runs": {
+    "seed1234": {
+      "count": 134,
+      "overall": {
+        "count": 134,
+        "success": 65,
+        "success_rate": 0.4851,
+        "avg_steps_success": 11.85,
+        "invalid_action_rate": 0.2355
+      },
+      "per_task": {
+        "pick_and_place": {
+          "count": 24,
+          "success": 11,
+          "success_rate": 0.4583,
+          "avg_steps_success": 11.91,
+          "invalid_action_rate": 0.2689
+        },
+        "pick_clean_then_place": {
+          "count": 31,
+          "success": 17,
+          "success_rate": 0.5484,
+          "avg_steps_success": 11.71,
+          "invalid_action_rate": 0.2247
+        },
+        "pick_heat_then_place": {
+          "count": 23,
+          "success": 14,
+          "success_rate": 0.6087,
+          "avg_steps_success": 9.29,
+          "invalid_action_rate": 0.2069
+        },
+        "pick_cool_then_place": {
+          "count": 21,
+          "success": 15,
+          "success_rate": 0.7143,
+          "avg_steps_success": 13.0,
+          "invalid_action_rate": 0.1556
+        },
+        "look_at_obj": {
+          "count": 18,
+          "success": 4,
+          "success_rate": 0.2222,
+          "avg_steps_success": 15.75,
+          "invalid_action_rate": 0.2307
+        },
+        "pick_two_obj": {
+          "count": 17,
+          "success": 4,
+          "success_rate": 0.2353,
+          "avg_steps_success": 13.0,
+          "invalid_action_rate": 0.2977
+        }
+      }
+    },
+    "seed42": {
+      "count": 134,
+      "overall": {
+        "count": 134,
+        "success": 64,
+        "success_rate": 0.4776,
+        "avg_steps_success": 12.31,
+        "invalid_action_rate": 0.2407
+      },
+      "per_task": {
+        "pick_and_place": {
+          "count": 24,
+          "success": 11,
+          "success_rate": 0.4583,
+          "avg_steps_success": 12.36,
+          "invalid_action_rate": 0.2583
+        },
+        "pick_clean_then_place": {
+          "count": 31,
+          "success": 15,
+          "success_rate": 0.4839,
+          "avg_steps_success": 11.2,
+          "invalid_action_rate": 0.2521
+        },
+        "pick_heat_then_place": {
+          "count": 23,
+          "success": 14,
+          "success_rate": 0.6087,
+          "avg_steps_success": 8.79,
+          "invalid_action_rate": 0.2077
+        },
+        "pick_cool_then_place": {
+          "count": 21,
+          "success": 14,
+          "success_rate": 0.6667,
+          "avg_steps_success": 14.5,
+          "invalid_action_rate": 0.1754
+        },
+        "look_at_obj": {
+          "count": 18,
+          "success": 4,
+          "success_rate": 0.2222,
+          "avg_steps_success": 16.25,
+          "invalid_action_rate": 0.2536
+        },
+        "pick_two_obj": {
+          "count": 17,
+          "success": 6,
+          "success_rate": 0.3529,
+          "avg_steps_success": 15.5,
+          "invalid_action_rate": 0.2722
+        }
+      }
+    },
+    "seed2024": {
+      "count": 101,
+      "overall": {
+        "count": 101,
+        "success": 54,
+        "success_rate": 0.5347,
+        "avg_steps_success": 11.5,
+        "invalid_action_rate": 0.2309
+      },
+      "per_task": {
+        "pick_and_place": {
+          "count": 16,
+          "success": 8,
+          "success_rate": 0.5,
+          "avg_steps_success": 10.38,
+          "invalid_action_rate": 0.294
+        },
+        "pick_clean_then_place": {
+          "count": 24,
+          "success": 16,
+          "success_rate": 0.6667,
+          "avg_steps_success": 12.38,
+          "invalid_action_rate": 0.2007
+        },
+        "pick_heat_then_place": {
+          "count": 16,
+          "success": 12,
+          "success_rate": 0.75,
+          "avg_steps_success": 8.83,
+          "invalid_action_rate": 0.1667
+        },
+        "pick_cool_then_place": {
+          "count": 18,
+          "success": 12,
+          "success_rate": 0.6667,
+          "avg_steps_success": 13.42,
+          "invalid_action_rate": 0.154
+        },
+        "look_at_obj": {
+          "count": 16,
+          "success": 3,
+          "success_rate": 0.1875,
+          "avg_steps_success": 12.67,
+          "invalid_action_rate": 0.2558
+        },
+        "pick_two_obj": {
+          "count": 11,
+          "success": 3,
+          "success_rate": 0.2727,
+          "avg_steps_success": 11.67,
+          "invalid_action_rate": 0.2897
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "pick_and_place": {
+      "success_rate": {
+        "mean": 47.22,
+        "std": 2.4076,
+        "runs": [
+          45.83,
+          45.83,
+          50.0
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 11.55,
+        "std": 1.0379,
+        "runs": [
+          11.91,
+          12.36,
+          10.38
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 27.3733,
+        "std": 1.8334,
+        "runs": [
+          26.89,
+          25.83,
+          29.4
+        ],
+        "n_valid": 3
+      }
+    },
+    "pick_clean_then_place": {
+      "success_rate": {
+        "mean": 56.6333,
+        "std": 9.271,
+        "runs": [
+          54.84,
+          48.39,
+          66.67
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 11.7633,
+        "std": 0.5918,
+        "runs": [
+          11.71,
+          11.2,
+          12.38
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 22.5833,
+        "std": 2.5719,
+        "runs": [
+          22.47,
+          25.21,
+          20.07
+        ],
+        "n_valid": 3
+      }
+    },
+    "pick_heat_then_place": {
+      "success_rate": {
+        "mean": 65.58,
+        "std": 8.158,
+        "runs": [
+          60.87,
+          60.87,
+          75.0
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 8.97,
+        "std": 0.2778,
+        "runs": [
+          9.29,
+          8.79,
+          8.83
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 19.3767,
+        "std": 2.3444,
+        "runs": [
+          20.69,
+          20.77,
+          16.67
+        ],
+        "n_valid": 3
+      }
+    },
+    "pick_cool_then_place": {
+      "success_rate": {
+        "mean": 68.2567,
+        "std": 2.7482,
+        "runs": [
+          71.43,
+          66.67,
+          66.67
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 13.64,
+        "std": 0.7738,
+        "runs": [
+          13.0,
+          14.5,
+          13.42
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 16.1667,
+        "std": 1.192,
+        "runs": [
+          15.56,
+          17.54,
+          15.4
+        ],
+        "n_valid": 3
+      }
+    },
+    "look_at_obj": {
+      "success_rate": {
+        "mean": 21.0633,
+        "std": 2.0034,
+        "runs": [
+          22.22,
+          22.22,
+          18.75
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 14.89,
+        "std": 1.9388,
+        "runs": [
+          15.75,
+          16.25,
+          12.67
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 24.67,
+        "std": 1.39,
+        "runs": [
+          23.07,
+          25.36,
+          25.58
+        ],
+        "n_valid": 3
+      }
+    },
+    "pick_two_obj": {
+      "success_rate": {
+        "mean": 28.6967,
+        "std": 6.0084,
+        "runs": [
+          23.53,
+          35.29,
+          27.27
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 13.39,
+        "std": 1.9446,
+        "runs": [
+          13.0,
+          15.5,
+          11.67
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 28.6533,
+        "std": 1.3042,
+        "runs": [
+          29.77,
+          27.22,
+          28.97
+        ],
+        "n_valid": 3
+      }
+    },
+    "总体": {
+      "success_rate": {
+        "mean": 49.9133,
+        "std": 3.1029,
+        "runs": [
+          48.51,
+          47.76,
+          53.47
+        ],
+        "n_valid": 3
+      },
+      "avg_steps_success": {
+        "mean": 11.8867,
+        "std": 0.4062,
+        "runs": [
+          11.85,
+          12.31,
+          11.5
+        ],
+        "n_valid": 3
+      },
+      "invalid_action_rate": {
+        "mean": 23.57,
+        "std": 0.4903,
+        "runs": [
+          23.55,
+          24.07,
+          23.09
+        ],
+        "n_valid": 3
+      }
+    }
+  }
+}

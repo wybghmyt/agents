@@ -1,0 +1,29 @@
+{
+  "per_task": {
+    "look_at_obj": {
+      "count": 1,
+      "success": 0,
+      "success_rate": 0.0,
+      "avg_steps": null,
+      "avg_steps_all": 50.0,
+      "invalid_action_rate": 0.74
+    },
+    "pick_two_obj": {
+      "count": 1,
+      "success": 0,
+      "success_rate": 0.0,
+      "avg_steps": null,
+      "avg_steps_all": 50.0,
+      "invalid_action_rate": 0.76
+    }
+  },
+  "overall": {
+    "count": 2,
+    "success": 0,
+    "success_rate": 0.0,
+    "avg_steps": null,
+    "avg_steps_all": 50.0,
+    "invalid_action_rate": 0.75,
+    "unique_games": 2
+  }
+}
