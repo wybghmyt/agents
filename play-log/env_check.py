@@ -1,15 +1,3 @@
-"""ALFWorld 手动游戏脚本 (人机交互)。
-
-流程:
-1. 用 base_config.yaml 创建文本环境 (AlfredTWEnv, unseen eval split)
-2. 开局显示任务目标和当前所有 admissible_commands
-3. 玩家每轮输入一条 command, 返回游戏反馈和最新的 admissible_commands
-4. 通关 (won) 后给出通关提示并退出程序
-5. 本局所有交互以可读的结构化格式追加到同目录下的 `play-log` 文件
-
-用法:
-    python env_check.py
-"""
 from alfworld.agents.environment.alfred_tw_env import AlfredTWEnv
 import os
 from datetime import datetime
@@ -31,7 +19,7 @@ def print_admissible(admissible):
 
 
 def append_log(gamefile, goal, turns, won):
-    """把本局交互以可读的结构化文本追加到日志文件。"""
+    # 把本局交互以可读的结构化文本追加到日志文件。
     lines = [
         "=" * 60,
         f"时间      : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
@@ -86,9 +74,10 @@ def main():
         print(f"\n{feedback}")
 
         if done[0]:
+            # 步数跳完了
             won = reward[0] > 0
             if won:
-                print("\n🎉 恭喜! 游戏通关!")
+                print("\n游戏通关")
             else:
                 print("\n游戏结束, 未能在限定步数内通关。")
             break

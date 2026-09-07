@@ -1,31 +1,3 @@
-"""ALFWorld unseen (eval_out_of_distribution) 全量评测 —— ReAct + Qwen2.5-7B-Instruct (vLLM)
-
-基线设定:
-- prompt: react/alfworld_3prompts.json, 每类任务取前 2 个 in-context 示例 (react_<type>_0/_1)
-- 最大步数: 50
-- 采样: temperature=0, max_tokens=100, stop=["\n"]
-- 评测集: eval_out_of_distribution 全量 (valid_unseen, 134 局)
-- 指标: 整体成功率 + 6 类任务成功率 + 平均步数 + 无效动作率
-
-上下文策略说明:
-- few-shot (2 个示例) + 当前局初始观测 + 完整历史轨迹, 正常情况下不超过 8K token;
-- 保险起见设置字符预算 (约 6500 token), 超预算时保留 few-shot + 初始观测 + 最近 N 步,
-  并记录被截断的次数。
-
-并发说明:
-- asyncio 主循环 + AsyncOpenAI 请求;
-- ALFWorld env 非线程安全: 每个 worker 拥有独立的 env 实例, 且该 env 的所有操作
-  (构建 / reset / step / skip) 都绑定在该 worker 专属的单线程 executor 上, 保证线程亲和性;
-- 游戏分配: 所有 env 实例的游戏洗牌顺序由固定种子 1234 决定且完全一致,
-  worker w 先 skip(w), 之后每局结束 skip(num_workers - 1), 从而第 w 路负责
-  第 w, w+N, w+2N, ... 局, 全量无重复无遗漏 (落盘后用 gamefile 唯一性二次校验)。
-
-用法:
-    conda activate alfworld
-    python eval.py                    # 全量 134 局
-    python eval.py --limit 4          # smoke test
-"""
-
 import argparse
 import asyncio
 import json
@@ -41,7 +13,7 @@ from openai import AsyncOpenAI
 
 os.environ.setdefault("ALFWORLD_DATA", "/root/autodl-tmp/alfworld")
 
-from alfworld.agents.environment.alfred_tw_env import AlfredTWEnv  # noqa: E402
+from alfworld.agents.environment.alfred_tw_env import AlfredTWEnv
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
@@ -88,8 +60,19 @@ PROMPT_KEY = {
 
 # ALFWorld 合法动作动词 (think 允许带冒号, 如 "think: I need to ...")
 VALID_VERBS = (
-    "think", "go to", "take", "put", "open", "close",
-    "clean", "heat", "cool", "use", "examine", "look", "inventory",
+    "think",
+    "go to",
+    "take",
+    "put",
+    "open",
+    "close",
+    "clean",
+    "heat",
+    "cool",
+    "use",
+    "examine",
+    "look",
+    "inventory",
 )
 
 # 上下文字符预算 (约 6500 token, 留有余量; max-model-len=8192)
@@ -107,13 +90,13 @@ def parse_task_type(gamefile: str) -> str:
 def normalize_action(raw: str):
     """动作规范化: 去掉 Action: 前缀 / 引号 / 句号 / 数字编号等, 返回 (规范化动作, 是否合法)。"""
     a = raw.strip()
-    a = re.sub(r"^>+\s*", "", a)                              # "> go to ..."
+    a = re.sub(r"^>+\s*", "", a)  # "> go to ..."
     a = re.sub(r"^(action|act)\s*[:：]\s*", "", a, flags=re.I)  # "Action: ..."
-    a = re.sub(r"^\d+[.)、]\s*", "", a)                         # "1. go to ..." / "2) ..."
-    a = re.sub(r"^step\s*\d+\s*[:：]\s*", "", a, flags=re.I)   # "Step 1: ..."
-    a = a.strip().strip('"\'`').strip()                        # 包裹引号
-    a = re.sub(r"[.。!！]+\s*$", "", a).strip()                 # 结尾标点
-    a = re.sub(r"\s+", " ", a).strip()                         # 压缩空白
+    a = re.sub(r"^\d+[.)、]\s*", "", a)  # "1. go to ..." / "2) ..."
+    a = re.sub(r"^step\s*\d+\s*[:：]\s*", "", a, flags=re.I)  # "Step 1: ..."
+    a = a.strip().strip("\"'`").strip()  # 包裹引号
+    a = re.sub(r"[.。!！]+\s*$", "", a).strip()  # 结尾标点
+    a = re.sub(r"\s+", " ", a).strip()  # 压缩空白
     if not a:
         return "", False
     low = a.lower()
@@ -198,10 +181,11 @@ class Worker:
             except Exception as e:
                 if attempt == 2:
                     raise
-                await asyncio.sleep(2 ** attempt)
+                await asyncio.sleep(2**attempt)
 
     async def run_episode(self, episode_id):
         env = self.env
+
         # 显式分配游戏: 把该 env 的内部迭代器替换为只含目标游戏的一次性迭代器,
         # 随后 reset() 会精确加载它。不依赖迭代器自动轮转:
         # shuffled_cycle 耗尽一轮后会用已漂移的 RNG 重新洗牌, 并发下会造成重复/遗漏
@@ -216,23 +200,27 @@ class Worker:
             gamefile = gamefile[0]
         task_type = parse_task_type(gamefile)
         prompt_key = PROMPT_KEY[task_type]
-        ex = ('Interact with a household to solve a task. Here are two examples.\n'
-              + self.prompts[f"react_{prompt_key}_1"]
-              + self.prompts[f"react_{prompt_key}_0"]
-              + '\nHere is the task.\n')
+        ex = (
+            "Interact with a household to solve a task. Here are two examples.\n"
+            + self.prompts[f"react_{prompt_key}_1"]
+            + self.prompts[f"react_{prompt_key}_0"]
+            + "\nHere is the task.\n"
+        )
         init_obs = obs[0]
         # 去掉 TextWorld 欢迎 banner: 该 banner 是 few-shot 示例里没有的陌生前缀,
         # 会破坏「任务情境 → > think:」的模式匹配。实测仅去掉它, pick_and_place 首步
         # P(think) 就从 0.185 回到 0.681 (7B 模型 ICL 弱、对输入格式扰动敏感);
         # 去除后真实任务输入与示例开头 ("You are in the middle of a room...") 对齐。
-        init_obs = re.sub(r"^-\s*=?\s*Welcome to TextWorld, ALFRED!\s*=?-?\s*", "", init_obs)
+        init_obs = re.sub(
+            r"^-\s*=?\s*Welcome to TextWorld, ALFRED!\s*=?-?\s*", "", init_obs
+        )
         # 再压掉初始观测内部的空行: few-shot 示例中 "You are in the middle of a room..."
         # 与 "Your task is to: ..." 是紧邻两行, 而环境返回的观测在两者之间夹了一个空行,
         # 保留会削弱「示例格式 → 真实输入」的模式匹配 (6 类任务结构一致, 仅此一处空行)。
         init_obs = re.sub(r"\n\s*\n+", "\n", init_obs).strip()
 
-        turns = []          # (action_sent, obs)
-        raw_outputs = []    # 每步完整记录
+        turns = []  # (action_sent, obs)
+        raw_outputs = []  # 每步完整记录
         success = False
         truncated_times = 0
         invalid_actions = 0
@@ -261,15 +249,17 @@ class Worker:
 
             sent = action.lower() if action else "look"
             turns.append((sent, new_obs))
-            raw_outputs.append({
-                "step": step + 1,
-                "raw": raw,
-                "action": sent,
-                "valid": bool(valid),
-                "obs": new_obs,
-                "reward": reward_val,
-                "done": done_val,
-            })
+            raw_outputs.append(
+                {
+                    "step": step + 1,
+                    "raw": raw,
+                    "action": sent,
+                    "valid": bool(valid),
+                    "obs": new_obs,
+                    "reward": reward_val,
+                    "done": done_val,
+                }
+            )
             # done为true，说明任务完成，游戏结束
             if done_val:
                 success = bool(reward_val > 0) or bool(info.get("won", [0])[0])
@@ -293,8 +283,20 @@ class Worker:
         return record
 
 
-async def worker_loop(wid, num_workers, total_games, queue, args, prompts, client,
-                      write_lock, env_lock, game_pool, traj_fp, stats):
+async def worker_loop(
+    wid,
+    num_workers,
+    total_games,
+    queue,
+    args,
+    prompts,
+    client,
+    write_lock,
+    env_lock,
+    game_pool,
+    traj_fp,
+    stats,
+):
     worker = Worker(wid, num_workers, args, prompts, client, env_lock, game_pool)
     # 建立游戏
     await worker.setup()
@@ -331,8 +333,10 @@ def summarize(traj_path, out_dir):
     if len(set(gamefiles)) != len(gamefiles):
         print("警告: 存在重复的 gamefile, 并发分配可能有误!")
 
-    per = {t: {"n": 0, "succ": 0, "steps": 0, "succ_steps": 0, "invalid": 0, "calls": 0}
-           for t in TASK_TYPE_ORDER}
+    per = {
+        t: {"n": 0, "succ": 0, "steps": 0, "succ_steps": 0, "invalid": 0, "calls": 0}
+        for t in TASK_TYPE_ORDER
+    }
     for r in records:
         s = per[r["task_type"]]
         s["n"] += 1
@@ -354,11 +358,12 @@ def summarize(traj_path, out_dir):
         if s["n"] == 0:
             continue
         sr = s["succ"] / s["n"]
-        avg_steps = s["succ_steps"] / s["succ"] if s["succ"] else None   # 仅成功局
-        avg_steps_all = s["steps"] / s["n"]                              # 全部局 (辅助)
+        avg_steps = s["succ_steps"] / s["succ"] if s["succ"] else None  # 仅成功局
+        avg_steps_all = s["steps"] / s["n"]  # 全部局 (辅助)
         inv = s["invalid"] / max(s["calls"], 1)
         summary["per_task"][t] = {
-            "count": s["n"], "success": s["succ"],
+            "count": s["n"],
+            "success": s["succ"],
             "success_rate": round(sr, 4),
             "avg_steps": round(avg_steps, 2) if avg_steps is not None else None,
             "avg_steps_all": round(avg_steps_all, 2),
@@ -375,10 +380,11 @@ def summarize(traj_path, out_dir):
     succ_steps = sum(r["num_steps"] for r in records if r["success"])
     invalid = sum(r["invalid_actions"] for r in records)
     calls = sum(r["llm_calls"] for r in records)
-    avg_steps_ov = succ_steps / succ if succ else None   # 仅成功局
+    avg_steps_ov = succ_steps / succ if succ else None  # 仅成功局
     steps_txt_ov = f"{avg_steps_ov:.2f}" if avg_steps_ov is not None else "-"
     summary["overall"] = {
-        "count": n, "success": succ,
+        "count": n,
+        "success": succ,
         "success_rate": round(succ / max(n, 1), 4),
         "avg_steps": round(avg_steps_ov, 2) if avg_steps_ov is not None else None,
         "avg_steps_all": round(steps / max(n, 1), 2),
@@ -401,15 +407,26 @@ def summarize(traj_path, out_dir):
 
 async def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--config", default=os.path.join(PROJECT_ROOT, "play-log/base_config.yaml"))
-    ap.add_argument("--prompts", default=os.path.join(PROJECT_ROOT, "react/alfworld_3prompts.json"))
-    ap.add_argument("--output-dir", default=os.path.join(PROJECT_ROOT, "results", "baseline"))
+    ap.add_argument(
+        "--config", default=os.path.join(PROJECT_ROOT, "play-log/base_config.yaml")
+    )
+    ap.add_argument(
+        "--prompts", default=os.path.join(PROJECT_ROOT, "react/alfworld_3prompts.json")
+    )
+    ap.add_argument(
+        "--output-dir", default=os.path.join(PROJECT_ROOT, "results", "baseline")
+    )
     ap.add_argument("--base-url", default="http://127.0.0.1:8000/v1")
     ap.add_argument("--model", default="qwen")
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--max-steps", type=int, default=50)
     ap.add_argument("--max-tokens", type=int, default=100)
-    ap.add_argument("--seed", type=int, default=1234, help="随机种子: 控制游戏洗牌/分配顺序, 并透传给 vLLM")
+    ap.add_argument(
+        "--seed",
+        type=int,
+        default=1234,
+        help="随机种子: 控制游戏洗牌/分配顺序, 并透传给 vLLM",
+    )
     ap.add_argument("--limit", type=int, default=0, help="只跑前 N 局 (smoke test 用)")
     args = ap.parse_args()
 
@@ -435,7 +452,7 @@ async def main():
     game_pool = list(tmp.game_files)
     rng.shuffle(game_pool)
 
-# 存放任务队列，如果有未开始但已搭建好的游戏，就先入队
+    # 存放任务队列，如果有未开始但已搭建好的游戏，就先入队
     queue = asyncio.Queue()
     for i in range(total_games):
         queue.put_nowait(i)
@@ -446,8 +463,20 @@ async def main():
     t0 = time.time()
     with open(traj_path, "w") as traj_fp:
         tasks = [
-            worker_loop(w, args.workers, total_games, queue, args, prompts,
-                        client, write_lock, env_lock, game_pool, traj_fp, stats)
+            worker_loop(
+                w,
+                args.workers,
+                total_games,
+                queue,
+                args,
+                prompts,
+                client,
+                write_lock,
+                env_lock,
+                game_pool,
+                traj_fp,
+                stats,
+            )
             for w in range(args.workers)
         ]
         await asyncio.gather(*tasks)
